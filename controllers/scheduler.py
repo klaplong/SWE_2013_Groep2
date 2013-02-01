@@ -36,6 +36,6 @@ class Scheduler():
             u_id = user_list[x]
             schedule_list.append((a_id, u_id))
         
-        if len(answers) > 1:
+        if len(user_list) > 1:
             Schedule.add_list(schedule_list)
             
