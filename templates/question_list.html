@@ -8,17 +8,17 @@
     var query_interval = 1000 * 5; // Every 5 sec
     var query_interval_id;
     var adding_question = false;
-    
-    $(function() {    
+
+    $(function() {
         get_student_questions();
-        query_interval_id = setInterval(get_student_questions, query_interval);    
-        
+        query_interval_id = setInterval(get_student_questions, query_interval);
+
     });
     $(document).ready(function() {
         refresh_table(0,stdlimit);
-        
+
     });
-    
+
     function get_student_questions(){
         $.getJSON("/get_student_questions", {},
         function(data) {
@@ -28,15 +28,15 @@
 					element.show();
 					element.attr('id', 'stud_question'+data[key].id);
 					element.appendTo('#student_container');
-					
+
 					element.find('.data:first').text(data[key].user);
-					
+
 					body = element.find('.accordion-body:first');
 					body.attr('id', 'collapse_sq'+data[key].id)
 					body.collapse();
-					
+
 					body.find('.accordion-inner:first').text(data[key].text);
-					
+
 					a = element.find('a:first');
 					a.click(function(){
 						name = data[key].user;
@@ -51,34 +51,45 @@
 					a.text(text);
 				}
 			}
-			
+
             $('#sQuestions').html('');
 			for (key in data) {
-               $('#sQuestions').append('\
-               <tr id=userrow_'+data[key].id+'> \
-                    <td>'+data[key].user+'</td><td id="user_q'+data[key].id+'">'+data[key].text+'</td> \
-                    <td><input type="submit" value="Copy question" class="btn-primary btn copyQ" onclick=add_userquestion('+data[key].id+') /></td>\
-                    <td><a onClick="delete_userquestion('+data[key].id+')" data-toggle="modal" class="delete-question-link link" ><i class="icon-remove-sign"></i> delete</a></td> \
-               </tr>')     
+               $('#sQuestions').append('<tr id=userrow_'+data[key].id+'>' +
+                    '<td>' + data[key].user + '</td>' +
+                    '<td id="user_q' + data[key].id + '">' +
+                    escapeMarkup(data[key].text) +
+                    '</td>' +
+                    '<td>' +
+                    '<input type="submit" value="Copy question" ' +
+                    'class="btn-primary btn copyQ" ' +
+                    'onclick=add_userquestion(' + data[key].id + ') />' +
+                    '</td>' +
+                    '<td>' +
+                    '<a onClick="delete_userquestion(' + data[key].id + ')" ' +
+                    'data-toggle="modal" class="delete-question-link link" >' +
+                    '<i class="icon-remove-sign"></i> delete</a>' +
+                    '</td>'+
+                    '</tr>'
+                );
             }
             if (adding_question){
                 $('#addQ').attr('disabled', 'disabled')
                 $('.copyQ').attr('disabled', 'disabled');
             }
         }
-    )}      
-    
+    )}
+
     function add_userquestion(id){
-        text = $('#user_q'+id).text();        
+        text = $('#user_q'+id).text();
         add_question();
-        $('#qtext').prop('value', text);        
+        $('#qtext').prop('value', text);
     }
-    
-    function delete_userquestion(id){    
+
+    function delete_userquestion(id){
         $.getJSON("/delete_userquestion/"+id,{},
-        function(data){            
+        function(data){
             if (data.deleted)
-                $('#userrow_'+id).remove();                
+                $('#userrow_'+id).remove();
         });
     }
 
@@ -102,16 +113,16 @@
     }
 
 
-    function edit_field(id){        
+    function edit_field(id){
         var elem = $('#question_' + id + ' a');
         var time_elem = $('#time_'+id);
 
         var text = elem.text();
         var time = time_elem.text();
-        
+
         if (isNaN(time))
             time = 0;
-        
+
         elem.hide();
         time_elem.text('');
 
@@ -126,11 +137,11 @@
             $('#edit_'+id).show();
             elem.show();
             $('#sedit_'+id).hide();
-            
-            var newTime = time_field.val();            
+
+            var newTime = time_field.val();
             var newText = edit_field.val();
 
-                
+
             edit_question(id,newText,newTime);
 
             if (newTime == 0)
@@ -174,7 +185,7 @@
             }
         });
     }
-    
+
 	var advanced_visible = false;
 	function advanced(){
 		if (advanced_visible) {
@@ -190,7 +201,7 @@
 		}
 		advanced_visible = !advanced_visible;
     }
-    
+
     function delete_question(id){
         $.getJSON("/delete_question/"+id,{},
         function(data){
@@ -301,7 +312,7 @@
 
     function cancel_question(){
         adding_question = false;
-        $('#cancelQ').hide()        
+        $('#cancelQ').hide()
          $('#addQ').attr('disabled', false);
           $('.copyQ').attr('disabled', false);
         $('#qList tr:eq(1)').remove()
@@ -315,28 +326,28 @@
 		ratingv = ($('#qrat').is(':checked') ? true : false);
         timev = $('#qtime').val();
         questionv = $('#qtext').val();
-        
+
 
         $.getJSON('/handle_question',{active:activev,comment:commentv,tags:tagsv,
             question:questionv,time:timev,rating:ratingv},
             function(data){
                 if (data.done) {
-                    adding_question = false;                    
+                    adding_question = false;
                     $('#save_question').attr('disabled', false);
                     $('#addQ').attr('disabled', false);
-                    $('.copyQ').attr('disabled', false);                 
-                    $('#cancelQ').hide();      
+                    $('.copyQ').attr('disabled', false);
+                    $('#cancelQ').hide();
                     $('#qList tr:eq(1)').remove()
                     reload();
-                }                
-                else {                                       
+                }
+                else {
                     alert("Please fill in a question");
                     cancel_question();
                 }
             });
         return false;
     }
-    
+
     var student_questions_visible = false;
 	function student_questions(){
 		if (student_questions_visible) {
