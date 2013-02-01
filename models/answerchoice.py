@@ -35,16 +35,9 @@ class AnswerChoiceModel(Base,BaseEntity):
         AnswerModel.set_ranking(self.other_answer_id, new_rating[1])
         
     def calc_new_trust(self):
-        print "GET HERE "
         winner    = AnswerModel.get_by_answer_id(self.best_answer_id)
         loser     = AnswerModel.get_by_answer_id(self.other_answer_id)
-        winner_h  = UserHistoryModel.get_by_user_id(winner.userID)
-        loser_h   = UserHistoryModel.get_by_user_id(loser.userID)
         new_trust = UserModel.newTrust(winner.userID, loser.userID)
-        #UserHistoryModel(winner.userID, new_trust[0], winner_h.answered, winner_h.asked)
-        #UserHistoryModel(loser.userID, new_trust[1], loser_h.answered, loser_h.asked) 
-        session.add(UserHistoryModel(winner.userID, new_trust[0], 17, 22))
-        session.commit()
-        session.add(UserHistoryModel(loser.userID, new_trust[1], 17, 25))
-        session.commit()
+        UserModel.setTrust(winner.userID,new_trust[0])
+        UserModel.setTrust(loser.userID,new_trust[1])
         
