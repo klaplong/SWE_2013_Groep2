@@ -5,6 +5,7 @@ from dbconnection import session
 from models.question import Question, UserQuestion
 from models.answer import AnswerModel
 from datetime import datetime, timedelta
+from models.answer import AnswerModel
 
 from controllers.scheduler import Scheduler
 from controllers.answer import Answer as AnswerController
@@ -199,6 +200,11 @@ class QuestionController():
         question = Question.by_id(int(qid))
         if g.lti.is_instructor():
             session.delete(question)
+            #Delete answers
+            quid = {"questionID": int(qid)}
+            answers = AnswerModel.get_filtered(**quid)
+            for x in answers:
+                session.delete(x)
             session.commit()
 
         return json.dumps({'deleted': g.lti.is_instructor()})

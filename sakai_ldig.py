@@ -59,6 +59,3 @@ class Ldig_parser():
 if __name__ == "__main__":
     parser = Ldig_parser("ldig_model.small")
     print parser.parse_answers(["I am an engineer.","As are you!","How nice,isn't it?"])
-    print parser.parse_answers(["Ik ben gek"])
-    print parser.parse_answers(["Ik ben Arjen Tamerus"])
-    print parser.parse_answers(["Ik ben Arjen Tamerus", "Hola espanola"])
