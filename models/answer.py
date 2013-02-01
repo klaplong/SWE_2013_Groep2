@@ -81,8 +81,11 @@ class AnswerModel(Base, BaseEntity):
 
     @staticmethod
     def add_q_stats(uid, qid):
-        answered = (session.query(AnswerModel).filter_by(userID=uid, questionID=qid)).one()
-        recorded = (session.query(UserHistoryModel).filter_by(userid=uid, source_id=qid)).first()
+        try:
+            answered = (session.query(AnswerModel).filter_by(userID=uid, questionID=qid)).one()
+            recorded = (session.query(UserHistoryModel).filter_by(userid=uid, source_id=qid)).first()
+        except:
+            return;
         if (recorded != None):
             boole = recorded.qanswered
 

@@ -285,6 +285,7 @@
 		ratingv = ($('#qrat').is(':checked') ? true : false);
         timev = $('#qtime').val();
         questionv = $('#qtext').val();
+        
 
         $.getJSON('/handle_question',{active:activev,comment:commentv,tags:tagsv,
             question:questionv,time:timev,rating:ratingv},
@@ -295,8 +296,7 @@
                     $('#addQ').attr('disabled', false);
                     $('.copyQ').attr('disabled', false);                 
                     $('#cancelQ').hide();      
-                    $('#qList tr:eq(1)').remove() 
-                    reload();
+                    $('#qList tr:eq(1)').remove()
                 }                
                 else {                                       
                     alert("Please fill in a question");
