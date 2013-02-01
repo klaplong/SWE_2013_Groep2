@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Created on Mon Jan 21 16:50:07 2013
 
@@ -36,5 +36,6 @@ class Scheduler():
             u_id = user_list[x]
             schedule_list.append((a_id, u_id))
         
-        Schedule.add_list(schedule_list)
+        if len(answers) > 1:
+            Schedule.add_list(schedule_list)
             
