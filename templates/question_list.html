@@ -21,9 +21,39 @@
     
     function get_student_questions(){
         $.getJSON("/get_student_questions", {},
-        function(data) {          
+        function(data) {
+			for(key in data) {
+				if($('#stud_question'+data[key].id).length <= 0){
+					element = $('#stud_question').clone();
+					element.show();
+					element.attr('id', 'stud_question'+data[key].id);
+					element.appendTo('#student_container');
+					
+					element.find('.data:first').text(data[key].user);
+					
+					body = element.find('.accordion-body:first');
+					body.attr('id', 'collapse_sq'+data[key].id)
+					body.collapse();
+					
+					body.find('.accordion-inner:first').text(data[key].text);
+					
+					a = element.find('a:first');
+					a.click(function(){
+						name = data[key].user;
+						a.text(name);
+					});
+					a.attr('href', '#'+body.attr('id'));
+					splits = data[key].text.split(' ');
+					text = splits.slice(0,9).join(' ');
+					if(splits.length > 10){
+						text += '...';
+					}
+					a.text(text);
+				}
+			}
+			
             $('#sQuestions').html('');
-           for (key in data) {
+			for (key in data) {
                $('#sQuestions').append('\
                <tr id=userrow_'+data[key].id+'> \
                     <td>'+data[key].user+'</td><td id="user_q'+data[key].id+'">'+data[key].text+'</td> \
@@ -255,7 +285,7 @@
 			<td class="tags-field"><input id="qtag" type="checkbox" name="tags" checked></td> \
 			<td class="rating-field"><input id="qrat" type="checkbox" name="rating" checked></td> \
 			<td colspan=2><input id="save_question" type="submit" onclick=save_question() class="btn btn-block btn-primary" value="Add Question"></td>\\n\
-                        <td><input style="display:none" type="submit"id="cancelQ" value="Cancel" class="btn" onclick=cancel_question() ></button></td>\
+                        <td><input style="display:none" type="submit"id="cancelQ" value="Cancel" class="btn" onclick=cancel_question() /></td>\
 		</tr>');
 		if (advanced_visible) {
             $('.comment-field').show();
@@ -319,8 +349,26 @@
     }
 
 </script>
+<div class="accordion-group">
+	<div class="accordion-heading">
+		<a class="accordion-toggle" data-toggle="collapse" href="#collapse_student_questions">
+			Student questions
+		</a>
+	</div>
+</div>
 
-    <a id="student_questions_btn" class="accordion-header" class="accordion-toggle" data-toggle="collapse" data-parent="#collapse_student_questions" href="#collapse_student_questions" >Student questions</a>
+<div class="accordion" id="student_container" style="display:none">
+	<div id="stud_question" class="accordion-group" style="display:none">
+		<div class="data" style="display:none"></div>
+		<div class="accordion-heading">
+			<a class="accordion-toggle" data-toggle="collapse" data-parent="#student_container" href=""></a>
+		</div>
+		<div id="collapseOne" class="accordion-body collapse in">
+			<div class="accordion-inner"></div>
+		</div>
+	</div>
+</div>
+
 <div class="accordion-body collapse" id="collapse_student_questions"><table id="student_questions" class="table table-hover table-bordered table-striped">
         <thead><tr><td><b>Student name</b></td><td><b>Suggested question</b></td></tr></thead>
         <tbody  id="sQuestions"></tbody>

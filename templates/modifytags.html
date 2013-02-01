@@ -1,4 +1,4 @@
-{% extends "_base.html" %}
+﻿{% extends "_base.html" %}
 {% block content %}
 
 <script>
@@ -40,7 +40,7 @@
   <b>New tag:</b>
   <br>
   <input id="tagText" type="text" name="newTag" />
-  <button id="addTag" class="btn-primary btn" value="Add Tag" onclick=add_tag()>Add Tag</button>
+  <button id="addTag" class="btn-primary btn" onclick="add_tag()">Add Tag</button>
 
 
 <form id="tagForm" action="/removetag" method="post">
